@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>逆九九チャレンジ</title>
+<style>
+body{
+    font-family: "Yu Gothic", sans-serif;
+    text-align:center;
+    background:linear-gradient(#87CEFA,#E0F7FF);
+    margin:0;
+    padding:20px;
+}
+
+h1{
+    color:#0b5394;
+}
+
+#score{
+    font-size:1.5em;
+    font-weight:bold;
+    margin:10px;
+}
+
+#question{
+    font-size:3em;
+    font-weight:bold;
+    margin:30px;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    max-width:500px;
+    margin:auto;
+}
+
+button{
+    font-size:2em;
+    padding:20px;
+    border:none;
+    border-radius:20px;
+    background:#FFD966;
+    cursor:pointer;
+    box-shadow:3px 3px 8px rgba(0,0,0,0.2);
+}
+
+button:hover{
+    background:#FFE599;
+}
+
+#result{
+    font-size:2em;
+    font-weight:bold;
+    margin:25px;
+    min-height:60px;
+}
+
+#flower{
+    font-size:4em;
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<h1>🌷 逆九九チャレンジ 🌷</h1>
+
+<div id="score">得点：0</div>
+
+<div id="question"></div>
+
+<div class="buttons" id="choices"></div>
+
+<div id="result"></div>
+
+<div id="flower">🌱</div>
+
+<script>
+let score = 0;
+let flowers = 0;
+let correctAnswer = 0;
+
+function makeQuestion(){
+
+    let a = Math.floor(Math.random()*9)+1;
+    let b = Math.floor(Math.random()*9)+1;
+
+    correctAnswer = a;
+
+    document.getElementById("question").textContent =
+        `□ × ${b} = ${a*b}`;
+
+    let choices = [correctAnswer];
+
+    while(choices.length < 4){
+        let n = Math.floor(Math.random()*9)+1;
+        if(!choices.includes(n)){
+            choices.push(n);
+        }
+    }
+
+    choices.sort(()=>Math.random()-0.5);
+
+    let area = document.getElementById("choices");
+    area.innerHTML = "";
+
+    choices.forEach(choice=>{
+        let btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = ()=>check(choice);
+        area.appendChild(btn);
+    });
+}
+
+function check(choice){
+
+    if(choice === correctAnswer){
+
+        score++;
+
+        flowers++;
+
+        document.getElementById("score").textContent =
+            `得点：${score}`;
+
+        document.getElementById("result").textContent =
+            "🎉 せいかい！";
+
+        let flowerIcons = [
+            "🌱",
+            "🌷",
+            "🌷🌷",
+            "🌷🌷🌷",
+            "🌷🌷🌷🌷",
+            "🌷🌷🌷🌷🌷"
+        ];
+
+        document.getElementById("flower").textContent =
+            flowerIcons[Math.min(flowers,5)];
+
+    }else{
+
+        document.getElementById("result").textContent =
+            `😊 おしい！ 正解は ${correctAnswer}`;
+    }
+
+    setTimeout(makeQuestion,1000);
+}
+
+makeQuestion();
+</script>
+
+</body>
+</html>
